@@ -5,6 +5,10 @@ description: Load external data into Streamlit correctly — st.connection (SQL 
 
 # st-connection — data access without re-querying every rerun
 
+For SQL / warehouses / APIs. Reading **parquet files on S3** (or any object
+store)? See [st-parquet] for partitioning, pushdown, and S3 credentials — the
+same `@st.cache_data(ttl=)` caching rules below apply.
+
 The whole script reruns on every widget touch ([st-core]), so a bare
 `pd.read_sql(...)` at script level re-hits the DB on EVERY interaction — the #1
 "my app is slow / feels stuck" cause. Fix: a pooled connection +
