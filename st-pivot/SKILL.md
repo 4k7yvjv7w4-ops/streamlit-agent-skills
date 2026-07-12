@@ -1,12 +1,12 @@
 ---
-name: streamlit-pivot
+name: st-pivot
 description: Build BI pivot tables in Streamlit with streamlit-pivot (the official component). Use when the user works with st_pivot_table — pivots, hierarchy trees with collapse, conditional formatting, cell-click callbacks into Python, Excel export — or asks for a free alternative to AG Grid Enterprise grouping.
 ---
 
 # streamlit-pivot (official Streamlit pivot component, 0.5.x)
 
 **Choosing a grid (shared matrix):** flat interactive grid or selection→Python
-→ **aggrid** · pivot/tree wired to Python → **streamlit-pivot** · huge-data
+→ **aggrid** · pivot/tree wired to Python → **st-pivot** · huge-data
 client-side exploration → **perspective** · live range Σ/avg status bar →
 **AG Grid enterprise only** (no free equivalent anywhere).
 
@@ -14,7 +14,7 @@ client-side exploration → **perspective** · live range Σ/avg status bar →
 Streamlit ≥ 1.51. Free, and unlike Perspective the config state and cell
 clicks come back to Python. Runnable demos: `st_pivot_lab.py` in this folder
 (click-any-level → second-frame chart), plus `aggrid_lab.py` in the
-[streamlit-aggrid] skill (`../streamlit-aggrid/aggrid_lab.py`), tab 10 + the
+[st-aggrid] skill (`../st-aggrid/aggrid_lab.py`), tab 10 + the
 🟩 expanders in tabs 1–8.
 
 **Install gotcha:** the component manifest is scanned at SERVER START — a

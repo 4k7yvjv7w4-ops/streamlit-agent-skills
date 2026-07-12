@@ -87,7 +87,7 @@ Give widgets you test a `key=`. `at.session_state[key]` reads a widget's value t
 - **No fragment partial reruns.** AppTest FULL-reruns on every interaction, so a
   `@st.fragment`'s scope-only rerun isn't modeled — fragment-local behavior
   (timer ticks, box-only reruns) can't be observed here; assert on the
-  session_state it writes instead ([streamlit-core]).
+  session_state it writes instead ([st-core]).
 - **An unconditional `st.rerun()` → `RuntimeError` timeout** (bounded hang at
   `default_timeout`), not a clean stop — that's the loop surfacing.
 - **`st.switch_page` can need a second `.run()`** to settle in AppTest; re-query

@@ -7,7 +7,7 @@ description: Streamlit page layout — columns, containers, tabs, expanders, pop
 
 Runnable proof of every claim: `st_layout_lab.py` in this skill folder
 (`python -m streamlit run ~/.roo/skills/st-layout/st_layout_lab.py`).
-Execution/state rules live in [streamlit-core]; this skill is where things go
+Execution/state rules live in [st-core]; this skill is where things go
 on the page.
 
 **Version guard:** verified on Streamlit **1.58**, API-checked on **1.55**.
@@ -83,7 +83,7 @@ with t[0]:
 - Trade-off: each switch is now a full rerun. Use `.open`-gating when tab
   bodies are expensive; plain tabs + `st.cache_data` when they're not.
 - Widgets inside a non-open gated branch don't execute → lose state
-  ([streamlit-core] rule: mirror to your own keys).
+  ([st-core] rule: mirror to your own keys).
 
 ## Expander & popover — visual, NOT lazy
 
@@ -213,6 +213,6 @@ columns/tabs/expanders are fine; the boundary is the function.
 3. Something renders twice / vanishes near a fragment → it's drawing outside
    itself; move it inside or go state + `st.rerun()`.
 4. Widget resets when a tab/branch hides it → the line didn't run;
-   mirror-to-own-key pattern in [streamlit-core].
+   mirror-to-own-key pattern in [st-core].
 5. Custom CSS broke after upgrade → it targeted `st-emotion-*`; re-anchor on
    `st-key-<key>` classes.

@@ -14,7 +14,7 @@ things in this skill don't exist yet: `selection_default=` and the
 
 **Grid matrix (shared with the other grid skills):** display + formatting +
 row-selection + editing → **this skill, native table** · JS-computed styling
-or grouping UI → [streamlit-aggrid] · pivot/tree wired to Python →
+or grouping UI → [st-aggrid] · pivot/tree wired to Python →
 [st-pivot] · huge-data client-side exploration → [perspective].
 Most "I need AG Grid" asks are actually covered here for free.
 
@@ -97,7 +97,7 @@ picked = df.iloc[ev.selection.rows]        # POSITIONAL indices -> iloc, never .
 - Row indices are positions in the frame AS PASSED; UI sorting doesn't
   renumber them.
 - Every selection click is a full rerun — cache the table's data
-  ([streamlit-core]).
+  ([st-core]).
 
 ## st.data_editor — editable grid
 

@@ -1,17 +1,17 @@
 ---
-name: streamlit-aggrid
+name: st-aggrid
 description: Build interactive data grids in Streamlit with streamlit-aggrid (AG Grid). Use when the user works with AgGrid/st_aggrid — flat grids, selection driving other widgets, JsCode styling, editing, grouping, range selection — or asks what needs an AG Grid Enterprise license.
 ---
 
 # Streamlit + AgGrid (streamlit-aggrid 1.2.x)
 
 **Choosing a grid (shared matrix):** flat interactive grid or selection→Python
-→ **aggrid** · pivot/tree wired to Python → **streamlit-pivot** · huge-data
+→ **aggrid** · pivot/tree wired to Python → **st-pivot** · huge-data
 client-side exploration → **perspective** · live range Σ/avg status bar →
 **AG Grid enterprise only** (no free equivalent anywhere).
 
 Runnable demo of every pattern below: `aggrid_lab.py` in this skill folder,
-tabs 1–8 (`python -m streamlit run ~/.roo/skills/streamlit-aggrid/aggrid_lab.py`;
+tabs 1–8 (`python -m streamlit run ~/.roo/skills/st-aggrid/aggrid_lab.py`;
 synthetic sample data bundled in `data/`). Assumes streamlit-aggrid **1.2.x**
 (`pip show streamlit-aggrid`).
 

@@ -1,5 +1,5 @@
 ---
-name: streamlit-core
+name: st-core
 description: Streamlit execution model — reruns, session_state, callbacks, forms, caching, fragments. Use when writing or debugging ANY Streamlit app, especially infinite rerun loops, values that reset or vanish on refresh, buttons that "don't work", state errors, or live/auto-refreshing sections.
 ---
 
@@ -11,7 +11,7 @@ handlers, no persistent locals, no main loop. A run is a pure function of
 `st.session_state` + current widget values. Everything below follows from this.
 
 Runnable proof of every claim: `st_core_lab.py` in this skill folder
-(`python -m streamlit run ~/.roo/skills/streamlit-core/st_core_lab.py`).
+(`python -m streamlit run ~/.roo/skills/st-core/st_core_lab.py`).
 Verified on Streamlit **1.58**, API-checked on **1.55**: everything in
 this skill exists on both (`st.fragment(run_every=)` needs ≥1.37).
 

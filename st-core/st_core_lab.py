@@ -1,4 +1,4 @@
-"""Streamlit execution-model lab — runnable ground truth for skills/streamlit-core.md.
+"""Streamlit execution-model lab — runnable ground truth for skills/st-core.md.
 
 Every tab demonstrates one class of bug a code-writing model produces
 (infinite rerun loops, vanishing outputs, state errors, bad refresh) with the
@@ -33,7 +33,7 @@ with st.sidebar:
         "model — the rest of the lab is consequences."
     )
     st.divider()
-    st.caption("Skill: `streamlit-core/SKILL.md`")
+    st.caption("Skill: `st-core/SKILL.md`")
 
 TABS = st.tabs(
     [

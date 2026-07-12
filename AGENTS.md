@@ -39,13 +39,13 @@ private identifier to `.check_generic.local`, never to a tracked file.
 
 | Dir | Covers | Lab |
 |---|---|---|
-| `streamlit-core/` | execution model: reruns, session_state, callbacks, forms, caching, fragments — load for ANY Streamlit app | `st_core_lab.py` |
+| `st-core/` | execution model: reruns, session_state, callbacks, forms, caching, fragments — load for ANY Streamlit app | `st_core_lab.py` |
 | `st-layout/` | columns, containers, tabs, expanders, dialogs, sidebar, multipage, sizing, CSS targeting | `st_layout_lab.py` + `st_nav_params_lab.py` (page→page params) |
 | `st-dataframe/` | native table: `st.dataframe`, `column_config`, `st.data_editor` | `st_dataframe_lab.py` |
-| `streamlit-aggrid/` | interactive grids (AG Grid): selection→Python, styling, grouping, editing, license map | `aggrid_lab.py` + `data/` |
-| `streamlit-pivot/` | official pivot component: pivot / tree / flat modes, click→Python, conditional formatting | `st_pivot_lab.py` |
-| `perspective-streamlit/` | FINOS Perspective for client-side pivoting on large tables — CDN embed + CDN-free `streamlit-perspective` route | `perspective_offline_lab.py` |
-| `streamlit-altair/` | charts (default over Plotly): mark/encode, column:TYPE cheat, MaxRowsError, selection→Python, layer/facet | `altair_lab.py` |
+| `st-aggrid/` | interactive grids (AG Grid): selection→Python, styling, grouping, editing, license map | `aggrid_lab.py` + `data/` |
+| `st-pivot/` | official pivot component: pivot / tree / flat modes, click→Python, conditional formatting | `st_pivot_lab.py` |
+| `st-perspective/` | FINOS Perspective for client-side pivoting on large tables — CDN embed + CDN-free `streamlit-perspective` route | `perspective_offline_lab.py` |
+| `st-altair/` | charts (default over Plotly): mark/encode, column:TYPE cheat, MaxRowsError, selection→Python, layer/facet | `altair_lab.py` |
 | `st-paramtree/` | schema-driven deep-settings tree (modal/inline): search, presets, import/export, visible_if, diff-from-defaults; ships reusable `paramtree.py` | `st_paramtree_lab.py` |
 | `st-connection/` | data access: st.connection (SQL/custom BaseConnection), cached queries + ttl, secrets.toml, no-re-query-per-rerun | `st_connection_lab.py` |
 | `st-testing/` | headless testing with `AppTest`: drive widgets by key, inject secrets/query_params, assert no exceptions, limits | `st_testing_lab.py` + `test_st_testing.py` |
@@ -66,7 +66,7 @@ decision matrix so the skills cross-reference each other.
 - Labs are standalone apps: `python -m streamlit run <skill>/<lab>.py`.
 - They also pass `streamlit.testing.v1.AppTest` with zero exceptions — run that
   as a smoke check after editing a lab.
-- The aggrid lab needs its `data/`: `cd streamlit-aggrid/data && python
+- The aggrid lab needs its `data/`: `cd st-aggrid/data && python
   make_sample_data.py` regenerates the seeded parquets.
 
 ## Version discipline

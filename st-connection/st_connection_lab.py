@@ -110,6 +110,6 @@ with tab3:
     st.code(
         '''# per-function:  load.clear()      # just this loader
 # app-wide:      st.cache_data.clear()
-# then st.rerun() behind a flip-first guard (see streamlit-core)''',
+# then st.rerun() behind a flip-first guard (see st-core)''',
         language="python",
     )

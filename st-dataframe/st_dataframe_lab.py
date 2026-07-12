@@ -363,6 +363,6 @@ df["bucket"] = df["bucket"].astype("category")     # + data_editor dropdown
         )
     st.divider()
     st.markdown("**When you've outgrown this:** JS-computed styling, grouping "
-                "UI, tree data → [streamlit-aggrid]; pivot UI → [st-pivot]; "
+                "UI, tree data → [st-aggrid]; pivot UI → [st-pivot]; "
                 "millions of rows client-side → [perspective]. For everything "
                 "else on this page, the native table is the right tool.")

@@ -5,7 +5,7 @@ description: Load external data into Streamlit correctly — st.connection (SQL 
 
 # st-connection — data access without re-querying every rerun
 
-The whole script reruns on every widget touch ([streamlit-core]), so a bare
+The whole script reruns on every widget touch ([st-core]), so a bare
 `pd.read_sql(...)` at script level re-hits the DB on EVERY interaction — the #1
 "my app is slow / feels stuck" cause. Fix: a pooled connection +
 **cached query functions**. Runnable proof: `st_connection_lab.py` in this
@@ -83,11 +83,11 @@ conn = st.connection("lat_db", type=SQLiteConnection)   # pooled like the built-
 ## Refresh & invalidation
 
 - **`ttl` is the scheduler** — `ttl="30s"` re-fetches at most twice a minute;
-  the widget-driven reruns in between serve cached data (see [streamlit-core]).
+  the widget-driven reruns in between serve cached data (see [st-core]).
 - **Manual refresh button:** `load_curve.clear()` (one function) or
   `st.cache_data.clear()` (all) then `st.rerun()` — behind a flip-first guard.
 - **Live section reading a NO-ttl cache never updates** — the classic
-  fragment-refresh trap ([streamlit-core]); give the loader a `ttl` ≤ the
+  fragment-refresh trap ([st-core]); give the loader a `ttl` ≤ the
   refresh cadence.
 - Connections auto-recover from a dropped link on next `query`; force it with
   `conn.reset()`.

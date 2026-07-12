@@ -1,12 +1,12 @@
 ---
-name: perspective-streamlit
+name: st-perspective
 description: Embed FINOS Perspective in Streamlit with the streamlit-perspective component (perspective_static / perspective_websocket) for client-side pivoting and exploration of large tables — CDN-free, self-hosted WASM, config round-trips to Python. Use for drag-drop pivots / column splits / chart plugins on big data, corporate/air-gapped setups, or linking Perspective to Streamlit.
 ---
 
 # FINOS Perspective in Streamlit — `streamlit-perspective` (0.0.x, perspective-viewer 3.x)
 
 **Choosing a grid (shared matrix):** flat interactive grid or selection→Python
-→ **aggrid** · pivot/tree wired to Python → **streamlit-pivot** · huge-data
+→ **aggrid** · pivot/tree wired to Python → **st-pivot** · huge-data
 client-side exploration → **perspective** · live range Σ/avg status bar →
 **AG Grid enterprise only** (no free equivalent anywhere).
 
@@ -27,7 +27,7 @@ pip install streamlit-perspective        # needs streamlit>=1.51, Python>=3.10
 (`asset_dir='frontend/build'`) is scanned at SERVER START; a bare import before
 restart raises `StreamlitAPIException: ... must be declared in pyproject.toml
 with asset_dir to use file-backed css`. Restart the server — don't debug the
-message. (Same gotcha as [streamlit-pivot].) Pin the version: it's early
+message. (Same gotcha as [st-pivot].) Pin the version: it's early
 (0.0.x, single maintainer) — treat the API as unstable.
 
 ## Core recipe — `perspective_static`
@@ -89,8 +89,8 @@ st.json(result["config"])            # the user's live pivot/filter/sort/theme, 
 - **Scope, precisely:** config only, on rerun only. There is **no
   `on_config_change` callback** (the wrappers hardwire a no-op), **no
   click/select events** reach Python, and **no data round-trip** (cell edits
-  change only the browser's copy). Need click→Python? Use [streamlit-pivot] or
-  [streamlit-aggrid].
+  change only the browser's copy). Need click→Python? Use [st-pivot] or
+  [st-aggrid].
 
 ## Per-column styling — `columns_config` (Perspective 3.x)
 

@@ -1,6 +1,6 @@
 """streamlit-pivot lab — click any level (top → leaf) → chart from a SECOND frame.
 
-Run:  python -m streamlit run streamlit-pivot/st_pivot_lab.py
+Run:  python -m streamlit run st-pivot/st_pivot_lab.py
 (needs `pip install streamlit-pivot`; restart the server after installing —
 the component manifest is scanned at server start.)
 

@@ -1,5 +1,5 @@
 ---
-name: streamlit-altair
+name: st-altair
 description: Charts in Streamlit with Altair (Vega-Lite) — the default choice over Plotly. Use when plotting ANY data in Streamlit (line/bar/scatter/area/heatmap/box), theming a chart, making a chart clickable (selection driving other widgets), layering/faceting, or debugging MaxRowsError, blank charts, wrong axis types, or "chart doesn't fill the width".
 ---
 
@@ -24,7 +24,7 @@ latency data, no files needed). Verified on Altair **6.2.2**, Streamlit **1.58**
 An Altair chart is a **spec built from a DataFrame**: pick a `mark_*`, then
 `encode()` DataFrame COLUMNS onto visual channels (x, y, color, size, tooltip).
 Streamlit renders it and applies its theme. Because the whole script reruns on
-every interaction (see [streamlit-core]), you **rebuild the chart from data each
+every interaction (see [st-core]), you **rebuild the chart from data each
 run** — there is no figure to mutate, no `plt.show()`, no imperative state.
 
 ```python
