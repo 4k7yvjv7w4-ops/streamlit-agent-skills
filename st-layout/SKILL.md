@@ -129,8 +129,34 @@ pg = st.navigation({"Monitoring": [st.Page(latency_fn, title="Latency", default=
                                    st.Page("pages/regions.py", url_path="regions")]},
                    position="top")     # "sidebar" default | "top" navbar | "hidden"
 pg.run()
-# st.switch_page(...) jumps; st.page_link(...) renders a styled link
 ```
+
+**No `pages/` directory required.** A page is anything you wrap in `st.Page`:
+a **function** (single-file app — no files/folders needed) OR a file path.
+Mix them freely.
+
+```python
+def home():    st.title("Home")     # pages are just functions
+def details(): st.title("Details")
+
+home_pg    = st.Page(home,    default=True)
+details_pg = st.Page(details, url_path="details")
+st.navigation([home_pg, details_pg]).run()   # a plain list works too (no dict/sections)
+```
+
+**Switch pages on a button click — `st.switch_page`:**
+
+```python
+if st.button("open details"):
+    st.switch_page(details_pg)      # pass the st.Page OBJECT (jumps immediately, no st.rerun)
+```
+
+- For a **function** page you MUST pass the `st.Page` object (`details_pg`),
+  NOT a string — a function has no file path. Only file-based pages
+  (`pages/x.py` model) can be switched to by path (`st.switch_page("pages/x.py")`).
+- The target must be **registered** in `st.navigation([...])` (or in `pages/`);
+  switching elsewhere raises `StreamlitAPIException`.
+- `st.page_link(details_pg, label="Details")` renders a clickable link instead.
 
 Session state is shared across pages; a page you navigate away from doesn't
 execute → its widgets lose values unless mirrored (core rule again).
