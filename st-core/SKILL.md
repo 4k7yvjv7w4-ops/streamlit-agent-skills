@@ -192,7 +192,8 @@ ticker()
   `run_every` be the cadence, never sleep. Nested fragments are allowed
   (verified) but each is an independent rerun scope — a child tick does not
   rerun its parent, so keep `run_every` on the fragment that owns the data;
-  don't nest timers for the same data.
+  don't nest timers for the same data. For REAL background work (submit a slow
+  job, keep navigating, results arrive) → [st-jobs].
 - Don't create the same-keyed widget both inside and outside a fragment.
 - **Fragment ticks but the value never changes? Your live read is cached.**
   A `@st.cache_data` loader with NO `ttl` runs its body ONCE (verified) and

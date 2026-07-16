@@ -5,7 +5,7 @@ overview lives in `README.md`; this file is the contributor/maintainer brief.
 
 ## What this is
 
-Eleven self-contained Streamlit skills in Roo / `SKILL.md` format. Each skill is a
+Twelve self-contained Streamlit skills in Roo / `SKILL.md` format. Each skill is a
 directory with a `SKILL.md` reference doc, optionally a runnable `*_lab.py`
 proof and a `data/` folder. Written for a mid-size model (target: Qwen 3.6-27B)
 that loads **one skill per task** (~2k tokens each), never all of them at once.
@@ -50,6 +50,7 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-connection/` | data access: st.connection (SQL/custom BaseConnection), cached queries + ttl, secrets.toml, no-re-query-per-rerun | `st_connection_lab.py` |
 | `st-testing/` | headless testing with `AppTest`: drive widgets by key, inject secrets/query_params, assert no exceptions, limits | `st_testing_lab.py` + `test_st_testing.py` |
 | `st-parquet/` | parquet/S3 data loading: hive partitioning, pushdown, S3 creds, overwrites, small-files, raw→aggregate rollups; companion to st-connection | `parquet_s3_demo.py` |
+| `st-jobs/` | background jobs: offload to a cache_resource'd executor + self-terminating fragment poller; silent-failure rule for st.* in workers; SQLite store in references/ | `st_jobs_lab.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
 decision matrix so the skills cross-reference each other.
