@@ -158,8 +158,28 @@ if st.button("open details"):
   switching elsewhere raises `StreamlitAPIException`.
 - `st.page_link(details_pg, label="Details")` renders a clickable link instead.
 
-Session state is shared across pages; a page you navigate away from doesn't
-execute → its widgets lose values unless mirrored (core rule again).
+**Widgets reset when you switch pages — the fix.** Session state is shared
+across pages, but a page you navigate away from doesn't execute, and Streamlit
+DELETES widget-keyed state for widgets that didn't render (verified: value gone
+while on the other page, widget back at default on return). Re-assigning the
+key to itself marks it "set via API" and exempts it (verified: survives the
+round-trip). One helper, called at the TOP of each page — BEFORE the widgets
+instantiate, or it raises:
+
+```python
+def keep(*keys):
+    for k in keys:
+        if k in st.session_state:
+            st.session_state[k] = st.session_state[k]
+
+def my_page():
+    keep("svc_pick", "win_days")          # these widgets now survive navigation
+    st.selectbox("service", SERVICES, key="svc_pick")
+    ...
+```
+
+(The mirror-to-own-key `on_change` pattern in [st-core] achieves the same;
+`keep()` is the ergonomic version for whole pages.)
 
 ### Passing params page → page (verified 1.58; both channels exist on 1.55)
 
