@@ -162,8 +162,8 @@ if st.button("open details"):
 across pages, but a page you navigate away from doesn't execute, and Streamlit
 DELETES widget-keyed state for widgets that didn't render (verified: value gone
 while on the other page, widget back at default on return). Re-assigning the
-key to itself marks it "set via API" and exempts it (verified: survives the
-round-trip). One helper, called at the TOP of each page — BEFORE the widgets
+key to itself marks it "set via API" and exempts it (verified on BOTH 1.58 and
+1.55: survives the round-trip). One helper, called at the TOP of each page — BEFORE the widgets
 instantiate, or it raises:
 
 ```python
