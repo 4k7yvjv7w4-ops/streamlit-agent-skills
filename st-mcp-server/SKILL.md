@@ -83,6 +83,26 @@ con.execute("CREATE VIEW regions AS SELECT * FROM read_csv_auto('regions.csv')")
 - Guards tighten: SELECT/WITH prefix **plus reject `;` chaining** (DuckDB will
   happily run multiple statements), caps via `fetchmany`, fresh connection per
   call (views recreated — no shared cursor state).
+- **Mismatched key names/formats — normalize IN the view, never per query.**
+  Real lakes disagree: one file has `account` = `12345`, another has
+  `"account id"` (a space!) = `acct:12345`, one's an int, one's a string. Fix
+  it ONCE at view definition so the model always sees one clean key
+  (verified — the reference server's `owners` source does exactly this):
+
+  ```sql
+  CREATE VIEW a AS SELECT CAST(account AS VARCHAR) AS account_id, ...;
+  CREATE VIEW b AS SELECT regexp_replace("account id", '^acct:', '') AS account_id,
+                          "account id" AS account_ref_raw,   -- keep raw for audit
+                          ... ;
+  ```
+
+  Three verified rules: use **`regexp_replace('^prefix:')`, NEVER `ltrim`** —
+  ltrim strips a character SET, not a prefix (`ltrim('acct:a123','acct:')` →
+  `'123'`, it ate the 'a'); **CAST both sides explicitly** (DuckDB happens to
+  implicitly cast int⋈varchar, other engines error — don't rely on it); and
+  after wiring, run a one-time coverage check
+  (`SELECT count(*) FROM a LEFT JOIN b USING(k) WHERE b.k IS NULL`) so silent
+  key mismatches surface as a number, not as wrong answers.
 - The per-source tools above remain right when sources are independent; switch
   to the DuckDB variant the moment answers span sources.
 

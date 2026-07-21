@@ -21,6 +21,10 @@ def extra_fixtures() -> None:
     con.close()
     pd.DataFrame(rows, columns=["region", "sla_ms"]).to_csv(
         duck.DATA_ROOT / "regions.csv", index=False)
+    # mismatched-key source: "region id" (space) + 'reg:' prefix
+    pd.DataFrame({"region id": [f"reg:{r}" for r, _ in rows],
+                  "owner_team": ["core", "search", "media"]}).to_csv(
+        duck.DATA_ROOT / "owners.csv", index=False)
 
 
 async def main() -> None:
@@ -31,7 +35,9 @@ async def main() -> None:
 
         r = await c.call_tool("describe_schema", {})
         schema = json.loads(r.content[0].text)
-        assert set(schema["tables"]) == {"events", "regions"}
+        assert set(schema["tables"]) == {"events", "regions", "owners"}
+        assert any(c.startswith("region ") for c in schema["tables"]["owners"]), \
+            schema["tables"]["owners"]          # normalized key visible as 'region'
         assert "join" in schema["join_keys"]["events"].lower()
         print("PASS describe_schema: tables + documented join keys:",
               list(schema["tables"]))
@@ -56,6 +62,16 @@ async def main() -> None:
                               {"sql": "SELECT * FROM events", "limit": 2})
         assert len(r.structuredContent["result"]) == 2
         print("PASS cap: limit respected")
+
+        # 3-way join through the NORMALIZED key (raw was "region id" = 'reg:...')
+        q3 = ("SELECT e.region, any_value(o.owner_team) AS team, avg(e.latency_ms) AS avg_ms "
+              "FROM events e JOIN owners o USING(region) "
+              "WHERE e.date = DATE '2025-03-02' GROUP BY e.region ORDER BY avg_ms")
+        r = await c.call_tool("query_sql", {"sql": q3})
+        rows3 = r.structuredContent["result"]
+        assert len(rows3) == 3 and rows3[0]["team"] in {"core", "search", "media"}
+        print("PASS normalized-key join: 'reg:'-prefixed \"region id\" joined cleanly ->",
+              rows3[0])
 
     print("\nALL OK")
 

@@ -28,6 +28,12 @@ SOURCES: dict[str, tuple[str, str]] = {
                  "region (join to regions.region); partitioned by date"),
     "regions":  (f"read_csv_auto('{DATA_ROOT}/regions.csv')",
                  "region (join to events.region)"),
+    # mismatched source: column is "region id" (space!) with values 'reg:<region>'
+    # -> normalize IN THE VIEW so the model always joins on a clean key
+    "owners":   (f"""(SELECT regexp_replace("region id", '^reg:', '') AS region,
+                            "region id" AS region_ref_raw, owner_team
+                     FROM read_csv_auto('{DATA_ROOT}/owners.csv'))""",
+                 "region (normalized from 'region id' values 'reg:<region>'; join to events.region)"),
 }
 
 mcp = FastMCP("duck-server")
