@@ -53,7 +53,7 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-jobs/` | background jobs: offload to a cache_resource'd executor + self-terminating fragment poller; silent-failure rule for st.* in workers; SQLite store in references/ | `st_jobs_lab.py` |
 | `st-flags/` | flag icons (countries/regions/currencies): offline Twemoji data URIs for markdown / ImageColumn / AgGrid renderer; Windows emoji trap; ships flag_emoji.py + flags/ | `st_flags_lab.py` |
 | `st-mcp-server/` | MCP server (FastMCP) over parquet/SQL/CSV/API: schema-from-type-hints, caps, read-only guards, transports, in-memory tests | `mcp_data_server.py` + `test_mcp_server.py` |
-| `st-mcp-client/` | LLM⇄MCP bridge for OpenAI-compatible endpoints: schema conversion, bounded tool loop, Streamlit chat recipe, trust rules | `mcp_llm_bridge.py` + `test_mcp_bridge.py` |
+| `st-mcp-client/` | LLM⇄MCP, LangChain-first (langchain-mcp-adapters + bind_tools + bounded loop; raw OpenAI-API bridge fallback), Streamlit chat recipe, trust rules | `test_mcp_langchain.py` + `mcp_llm_bridge.py` + `test_mcp_bridge.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
 decision matrix so the skills cross-reference each other.
