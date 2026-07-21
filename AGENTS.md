@@ -5,7 +5,7 @@ overview lives in `README.md`; this file is the contributor/maintainer brief.
 
 ## What this is
 
-Thirteen self-contained Streamlit skills in Roo / `SKILL.md` format. Each skill is a
+Fifteen self-contained Streamlit skills in Roo / `SKILL.md` format. Each skill is a
 directory with a `SKILL.md` reference doc, optionally a runnable `*_lab.py`
 proof and a `data/` folder. Written for a mid-size model (target: Qwen 3.6-27B)
 that loads **one skill per task** (~2k tokens each), never all of them at once.
@@ -52,6 +52,8 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-parquet/` | parquet/S3 data loading: hive partitioning, pushdown, S3 creds, overwrites, small-files, raw→aggregate rollups; companion to st-connection | `parquet_s3_demo.py` |
 | `st-jobs/` | background jobs: offload to a cache_resource'd executor + self-terminating fragment poller; silent-failure rule for st.* in workers; SQLite store in references/ | `st_jobs_lab.py` |
 | `st-flags/` | flag icons (countries/regions/currencies): offline Twemoji data URIs for markdown / ImageColumn / AgGrid renderer; Windows emoji trap; ships flag_emoji.py + flags/ | `st_flags_lab.py` |
+| `st-mcp-server/` | MCP server (FastMCP) over parquet/SQL/CSV/API: schema-from-type-hints, caps, read-only guards, transports, in-memory tests | `mcp_data_server.py` + `test_mcp_server.py` |
+| `st-mcp-client/` | LLM⇄MCP bridge for OpenAI-compatible endpoints: schema conversion, bounded tool loop, Streamlit chat recipe, trust rules | `mcp_llm_bridge.py` + `test_mcp_bridge.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
 decision matrix so the skills cross-reference each other.
