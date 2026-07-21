@@ -56,6 +56,36 @@ if __name__ == "__main__":
    and pushes both into the read — the [st-parquet] rules apply verbatim
    inside tools.
 
+## Sources that share keys — federate with DuckDB, don't join in the model
+
+When several parquet datasets and CSVs share id columns, do NOT expose them as
+separate fetch tools and let the model merge rows in its context — that's
+token-expensive, capped, and a mid-size model mis-joins silently. Register the
+files as VIEWS in DuckDB (queries them IN PLACE — parquet pushdown included)
+and expose exactly TWO tools (`mcp_duck_server.py`, proven by
+`test_mcp_duck.py`):
+
+```python
+con = duckdb.connect()
+con.execute("CREATE VIEW events  AS SELECT * FROM read_parquet('lake/*/*.parquet', hive_partitioning=true)")
+con.execute("CREATE VIEW regions AS SELECT * FROM read_csv_auto('regions.csv')")
+# tool 1: describe_schema() -> tables, columns/types AND DOCUMENTED JOIN KEYS
+# tool 2: query_sql(sql)    -> one SELECT/WITH over ALL sources; joins welcome
+```
+
+- **`describe_schema` matters more than the query tool**: list every table's
+  columns *and write the join keys down for the model* ("events.region joins
+  regions.region") — a 27B cannot guess keys; documented keys make its SQL
+  correct on the first try.
+- One SQL join across parquet ⋈ CSV, aggregated server-side, returns a few
+  rows instead of two row-dumps (verified). Partition filters still push down
+  into the parquet scan (verified via EXPLAIN).
+- Guards tighten: SELECT/WITH prefix **plus reject `;` chaining** (DuckDB will
+  happily run multiple statements), caps via `fetchmany`, fresh connection per
+  call (views recreated — no shared cursor state).
+- The per-source tools above remain right when sources are independent; switch
+  to the DuckDB variant the moment answers span sources.
+
 ## Transports — which one you want
 
 | Transport | Run | For |

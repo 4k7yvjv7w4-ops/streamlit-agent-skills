@@ -52,7 +52,7 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-parquet/` | parquet/S3 data loading: hive partitioning, pushdown, S3 creds, overwrites, small-files, raw→aggregate rollups; companion to st-connection | `parquet_s3_demo.py` |
 | `st-jobs/` | background jobs: offload to a cache_resource'd executor + self-terminating fragment poller; silent-failure rule for st.* in workers; SQLite store in references/ | `st_jobs_lab.py` |
 | `st-flags/` | flag icons (countries/regions/currencies): offline Twemoji data URIs for markdown / ImageColumn / AgGrid renderer; Windows emoji trap; ships flag_emoji.py + flags/ | `st_flags_lab.py` |
-| `st-mcp-server/` | MCP server (FastMCP) over parquet/SQL/CSV/API: schema-from-type-hints, caps, read-only guards, transports, in-memory tests | `mcp_data_server.py` + `test_mcp_server.py` |
+| `st-mcp-server/` | MCP server (FastMCP) over parquet/SQL/CSV/API: schema-from-type-hints, caps, read-only guards, transports, in-memory tests; DuckDB federation variant for cross-source joins | `mcp_data_server.py` + `mcp_duck_server.py` + tests |
 | `st-mcp-client/` | LLM⇄MCP, LangChain-first (langchain-mcp-adapters + bind_tools + bounded loop; raw OpenAI-API bridge fallback), Streamlit chat recipe, trust rules | `test_mcp_langchain.py` + `mcp_llm_bridge.py` + `test_mcp_bridge.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
