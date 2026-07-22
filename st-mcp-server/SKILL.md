@@ -103,6 +103,16 @@ con.execute("CREATE VIEW regions AS SELECT * FROM read_csv_auto('regions.csv')")
   after wiring, run a one-time coverage check
   (`SELECT count(*) FROM a LEFT JOIN b USING(k) WHERE b.k IS NULL`) so silent
   key mismatches surface as a number, not as wrong answers.
+- **Is view-normalization slower? Measured (3M-row fact, local parquet):**
+  join through a normalized fact key ~4x slower (63→257 ms) and a selective
+  `WHERE key=…` ~15x slower (10→159 ms — the computed column loses parquet
+  zone-map pruning); a small messy CSV dimension costs only ~+80 ms/query.
+  So the rule: **small reference tables → normalize in views forever; large
+  FACT tables (or big CSVs) → re-save a clean copy.** Keep the original files
+  immutable and write a normalized parquet "silver" dataset with the
+  idempotent per-partition job from [st-parquet] (clean canonical keys, CSVs
+  converted to parquet); point the views at silver. On S3 the gap widens —
+  CSV re-parse and lost pruning both multiply by network I/O.
 - The per-source tools above remain right when sources are independent; switch
   to the DuckDB variant the moment answers span sources.
 
