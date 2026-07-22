@@ -1,6 +1,6 @@
 ---
 name: st-duckdb
-description: DuckDB as the in-app query engine for a Streamlit + S3/parquet setup — SQL (joins, aggregations) directly over parquet/CSV lakes without loading whole DataFrames: cached connection + cursor-per-operation, views over sources, httpfs/S3 credentials (plus a no-httpfs fsspec/s3fs fallback when the extension can't be installed), register() to join in-memory frames with the lake, arrow/df result handoff, cache_data on queries. Use when a Streamlit page needs SQL over files, cross-file joins, or pandas groupby/merge chains are slow/memory-hungry.
+description: DuckDB as the in-app query engine for a Streamlit + S3/parquet setup — SQL (joins, aggregations) directly over parquet/CSV lakes without loading whole DataFrames: cached connection + cursor-per-operation, views over sources, httpfs/S3 credentials (plus no-install S3 fallbacks — pyarrow-native S3 dataset or fsspec/s3fs — when httpfs can't be installed), register() to join in-memory frames with the lake, arrow/df result handoff, cache_data on queries. Use when a Streamlit page needs SQL over files, cross-file joins, or pandas groupby/merge chains are slow/memory-hungry.
 ---
 
 # st-duckdb — SQL over your lake, inside the app
@@ -61,27 +61,41 @@ con.execute("CREATE VIEW events AS SELECT * FROM "
 - Pushdown carries over S3: partition + projection + zone-maps mean you pay
   for slices, not the lake ([st-parquet]). Filter in SQL, never in pandas after.
 
-## No httpfs? Two verified fallbacks (pure pip wheels, nothing to INSTALL)
+## No httpfs, no s3fs? — the zero-install route (verified)
 
-`pip install fsspec s3fs` — ordinary packages, they come through any
-proxy/internal index even where the extension download is blocked.
+`pyarrow` ships with Streamlit itself and has a **native S3 filesystem** — no
+extension download, no extra package:
 
 ```python
-import fsspec
-fs = fsspec.filesystem("s3")        # same AWS credential chain as boto3
-con.register_filesystem(fs)         # do this BEFORE the CREATE VIEW lines
-con.execute("CREATE VIEW events AS SELECT * FROM "
-            "read_parquet('s3://bkt/lake/*/*.parquet', hive_partitioning=true)")
+import pyarrow.dataset as pads
+from pyarrow import fs as pafs
+
+@st.cache_resource
+def lake() -> "pads.Dataset":
+    s3 = pafs.S3FileSystem(region="eu-west-1")   # creds: standard AWS chain
+    return pads.dataset("bkt/lake", filesystem=s3, partitioning="hive")
+
+@st.cache_data(ttl="10m", show_spinner=False)
+def q(sql: str) -> "pd.DataFrame":
+    cur = db().cursor()
+    cur.register("events", lake())   # register on the CURSOR you query with
+    return cur.execute(sql).df()
 ```
 
-- **Verified** (against an fsspec filesystem standing in for s3fs): hive-partition
-  pruning still shows up as file filters in `EXPLAIN`, and **cursors inherit the
-  registered filesystem** — the cache_resource + cursor wiring above is unchanged.
-- Alternative, if you already build pyarrow datasets ([st-parquet]):
-  `con.register("events", pads.dataset("bkt/lake", filesystem=fs, partitioning="hive"))`
-  — verified: the plan is an `ARROW_SCAN` with projections AND filters pushed down.
-- Ranking: httpfs (native reader) is the fastest for big scans → vendored-extension
-  install when you can ship a file → fsspec/s3fs as the works-anywhere route.
+- **Verified:** the plan is an `ARROW_SCAN` with projections AND filters pushed
+  down into the dataset — you still pay for slices, not the lake. 8 concurrent
+  cursors sharing one dataset ran clean.
+- **`register()` is connection-local** — a cursor does NOT inherit the parent's
+  registrations (views don't rescue it either: a view over a registered name
+  fails from a cursor). Register on every cursor; it only binds a Python
+  object — effectively free.
+- Internal/MinIO endpoint: `pafs.S3FileSystem(endpoint_override='minio.internal:9000')`.
+- If you CAN `pip install fsspec s3fs` later: `con.register_filesystem(fsspec.filesystem("s3"))`
+  keeps the plain `read_parquet('s3://…')` views (verified: hive pruning holds,
+  and cursors DO inherit a registered *filesystem*, unlike `register()`).
+- Ranking: httpfs (native reader, fastest) → vendored
+  `INSTALL 'path/to/httpfs.duckdb_extension'` → this pyarrow route (zero
+  install) → fsspec/s3fs → boto3 download-to-local-cache ([st-parquet]) last.
 
 ## Join the lake with in-memory frames — `register()` (verified)
 
@@ -119,4 +133,5 @@ df = cur.execute("""SELECT e.region, avg(e.latency_ms) avg_ms, any_value(o.new_s
 - A DuckDB query blocks the script thread like any other work — long scans on
   a slow lake belong in a background job ([st-jobs]).
 - Don't `register()` under a name that shadows a view — last definition wins
-  silently; keep in-memory names distinct (`overrides`, not `events`).
+  silently; keep in-memory names distinct (`overrides`, not `events`). And
+  registrations are per-connection/cursor, never shared (section above).
