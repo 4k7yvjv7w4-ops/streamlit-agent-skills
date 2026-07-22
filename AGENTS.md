@@ -5,7 +5,7 @@ overview lives in `README.md`; this file is the contributor/maintainer brief.
 
 ## What this is
 
-Fifteen self-contained Streamlit skills in Roo / `SKILL.md` format. Each skill is a
+Sixteen self-contained Streamlit skills in Roo / `SKILL.md` format. Each skill is a
 directory with a `SKILL.md` reference doc, optionally a runnable `*_lab.py`
 proof and a `data/` folder. Written for a mid-size model (target: Qwen 3.6-27B)
 that loads **one skill per task** (~2k tokens each), never all of them at once.
@@ -54,6 +54,7 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-flags/` | flag icons (countries/regions/currencies): offline Twemoji data URIs for markdown / ImageColumn / AgGrid renderer; Windows emoji trap; ships flag_emoji.py + flags/ | `st_flags_lab.py` |
 | `st-mcp-server/` | MCP server (FastMCP) over parquet/SQL/CSV/API: schema-from-type-hints, caps, read-only guards, transports, in-memory tests; DuckDB federation variant for cross-source joins | `mcp_data_server.py` + `mcp_duck_server.py` + tests |
 | `st-mcp-client/` | LLM⇄MCP, LangChain-first (langchain-mcp-adapters + bind_tools + bounded loop; raw OpenAI-API bridge fallback), Streamlit chat recipe, trust rules | `test_mcp_langchain.py` + `mcp_llm_bridge.py` + `test_mcp_bridge.py` |
+| `st-duckdb/` | in-app DuckDB over parquet/CSV/S3: cache_resource connection + cursor per op, views, httpfs secrets, register() memory⋈lake joins, df/arrow out, cache_data | `st_duckdb_lab.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
 decision matrix so the skills cross-reference each other.

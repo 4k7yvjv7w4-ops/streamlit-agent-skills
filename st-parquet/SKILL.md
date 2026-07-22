@@ -131,6 +131,9 @@ count.
 
 ## Caching reads in Streamlit
 
+Need SQL (joins/aggregations) over the lake inside the app instead of
+pandas? → [st-duckdb].
+
 ```python
 @st.cache_data(ttl="30s")                 # today's partition: short ttl
 def load_day(day): return pd.read_parquet(f"s3://bkt/events", filters=[("date","==",day)])
