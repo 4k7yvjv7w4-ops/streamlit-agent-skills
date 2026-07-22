@@ -1,6 +1,6 @@
 ---
 name: st-duckdb
-description: DuckDB as the in-app query engine for a Streamlit + S3/parquet setup — SQL (joins, aggregations) directly over parquet/CSV lakes without loading whole DataFrames: cached connection + cursor-per-operation, views over sources, httpfs/S3 credentials, register() to join in-memory frames with the lake, arrow/df result handoff, cache_data on queries. Use when a Streamlit page needs SQL over files, cross-file joins, or pandas groupby/merge chains are slow/memory-hungry.
+description: DuckDB as the in-app query engine for a Streamlit + S3/parquet setup — SQL (joins, aggregations) directly over parquet/CSV lakes without loading whole DataFrames: cached connection + cursor-per-operation, views over sources, httpfs/S3 credentials (plus a no-httpfs fsspec/s3fs fallback when the extension can't be installed), register() to join in-memory frames with the lake, arrow/df result handoff, cache_data on queries. Use when a Streamlit page needs SQL over files, cross-file joins, or pandas groupby/merge chains are slow/memory-hungry.
 ---
 
 # st-duckdb — SQL over your lake, inside the app
@@ -60,6 +60,28 @@ con.execute("CREATE VIEW events AS SELECT * FROM "
   / `SET extension_directory` — then everything is offline.
 - Pushdown carries over S3: partition + projection + zone-maps mean you pay
   for slices, not the lake ([st-parquet]). Filter in SQL, never in pandas after.
+
+## No httpfs? Two verified fallbacks (pure pip wheels, nothing to INSTALL)
+
+`pip install fsspec s3fs` — ordinary packages, they come through any
+proxy/internal index even where the extension download is blocked.
+
+```python
+import fsspec
+fs = fsspec.filesystem("s3")        # same AWS credential chain as boto3
+con.register_filesystem(fs)         # do this BEFORE the CREATE VIEW lines
+con.execute("CREATE VIEW events AS SELECT * FROM "
+            "read_parquet('s3://bkt/lake/*/*.parquet', hive_partitioning=true)")
+```
+
+- **Verified** (against an fsspec filesystem standing in for s3fs): hive-partition
+  pruning still shows up as file filters in `EXPLAIN`, and **cursors inherit the
+  registered filesystem** — the cache_resource + cursor wiring above is unchanged.
+- Alternative, if you already build pyarrow datasets ([st-parquet]):
+  `con.register("events", pads.dataset("bkt/lake", filesystem=fs, partitioning="hive"))`
+  — verified: the plan is an `ARROW_SCAN` with projections AND filters pushed down.
+- Ranking: httpfs (native reader) is the fastest for big scans → vendored-extension
+  install when you can ship a file → fsspec/s3fs as the works-anywhere route.
 
 ## Join the lake with in-memory frames — `register()` (verified)
 
