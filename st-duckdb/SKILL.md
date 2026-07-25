@@ -93,6 +93,13 @@ def q(sql: str) -> "pd.DataFrame":
 - If you CAN `pip install fsspec s3fs` later: `con.register_filesystem(fsspec.filesystem("s3"))`
   keeps the plain `read_parquet('s3://…')` views (verified: hive pruning holds,
   and cursors DO inherit a registered *filesystem*, unlike `register()`).
+- Corporate setups often already hand you this object: an internal credentials
+  wrapper returning an s3fs-style filesystem (recognize it by
+  `fs.open(path, 'rb')` and `fs.protocol == 's3'`). Register THAT object
+  directly — `con.register_filesystem(wrapper.init_connection())` — and pass
+  the same `fs` to `pads.dataset(..., filesystem=fs)` /
+  `pads.write_dataset(..., filesystem=fs)`. Never `df.to_parquet('s3://…')`
+  with a bare URL — pandas builds its own connection and bypasses the wrapper.
 - Ranking: httpfs (native reader, fastest) → vendored
   `INSTALL 'path/to/httpfs.duckdb_extension'` → this pyarrow route (zero
   install) → fsspec/s3fs → boto3 download-to-local-cache ([st-parquet]) last.
