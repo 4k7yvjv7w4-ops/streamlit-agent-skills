@@ -95,11 +95,21 @@ def q(sql: str) -> "pd.DataFrame":
   and cursors DO inherit a registered *filesystem*, unlike `register()`).
 - Corporate setups often already hand you this object: an internal credentials
   wrapper returning an s3fs-style filesystem (recognize it by
-  `fs.open(path, 'rb')` and `fs.protocol == 's3'`). Register THAT object
-  directly — `con.register_filesystem(wrapper.init_connection())` — and pass
-  the same `fs` to `pads.dataset(..., filesystem=fs)` /
-  `pads.write_dataset(..., filesystem=fs)`. Never `df.to_parquet('s3://…')`
-  with a bare URL — pandas builds its own connection and bypasses the wrapper.
+  `fs.open(path, 'rb')`). Check `fs.protocol` first:
+  - `'s3'` → register it directly: `con.register_filesystem(wrapper.init_connection())`.
+  - `'abstract'` (the AbstractFileSystem default, common in home-grown
+    wrappers) → DuckDB REFUSES it ("Must provide concrete fsspec
+    implementation"). Patch on the CLASS, not the instance —
+    `type(fs).protocol = "s3"` — (instance patch registers but finds no
+    files; `_strip_protocol` is a classmethod). Even then DuckDB needs
+    `fs.modified()` etc. — an incomplete wrapper throws NotImplementedError
+    mid-query. Verified-safe alternative that works with the wrapper
+    UNTOUCHED: `pads.dataset("bkt/lake", filesystem=fs, partitioning="hive")`
+    + per-cursor `register()` (the zero-install section) — pyarrow ignores
+    `protocol` and needs only open/ls/info.
+  Pass the same `fs` to `pads.write_dataset(..., filesystem=fs)` for writes.
+  Never `df.to_parquet('s3://…')` with a bare URL — pandas builds its own
+  connection and bypasses the wrapper.
 - Ranking: httpfs (native reader, fastest) → vendored
   `INSTALL 'path/to/httpfs.duckdb_extension'` → this pyarrow route (zero
   install) → fsspec/s3fs → boto3 download-to-local-cache ([st-parquet]) last.
