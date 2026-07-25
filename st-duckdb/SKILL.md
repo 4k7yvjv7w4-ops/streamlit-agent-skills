@@ -95,18 +95,27 @@ def q(sql: str) -> "pd.DataFrame":
   and cursors DO inherit a registered *filesystem*, unlike `register()`).
 - Corporate setups often already hand you this object: an internal credentials
   wrapper returning an s3fs-style filesystem (recognize it by
-  `fs.open(path, 'rb')`). Check `fs.protocol` first:
-  - `'s3'` → register it directly: `con.register_filesystem(wrapper.init_connection())`.
-  - `'abstract'` (the AbstractFileSystem default, common in home-grown
-    wrappers) → DuckDB REFUSES it ("Must provide concrete fsspec
-    implementation"). Patch on the CLASS, not the instance —
-    `type(fs).protocol = "s3"` — (instance patch registers but finds no
-    files; `_strip_protocol` is a classmethod). Even then DuckDB needs
-    `fs.modified()` etc. — an incomplete wrapper throws NotImplementedError
-    mid-query. Verified-safe alternative that works with the wrapper
-    UNTOUCHED: `pads.dataset("bkt/lake", filesystem=fs, partitioning="hive")`
-    + per-cursor `register()` (the zero-install section) — pyarrow ignores
-    `protocol` and needs only open/ls/info.
+  `fs.open(path, 'rb')`). Probe BEFORE wiring it to DuckDB: `fs.protocol`,
+  and `list(fs.ls("s3://bkt/prefix"))` — scheme INCLUDED, because that's what
+  DuckDB's bridge sends.
+  - `protocol == 's3'` AND the schemed ls works → true s3fs; register it:
+    `con.register_filesystem(wrapper.init_connection())` and use `s3://` views.
+  - `protocol == 'abstract'` → DuckDB refuses to register ("Must provide
+    concrete fsspec implementation"). The patch is `type(fs).protocol = "s3"`
+    on the CLASS (instance patch registers but finds no files —
+    `_strip_protocol` is a classmethod) — but only proceed if the schemed
+    ls probe passes.
+  - Schemed ls errors/hangs (home-grown wrappers often can't strip `s3://`
+    — "directory expected"-style errors, generators from ls, missing
+    `modified()`) → do NOT register; `CREATE VIEW` will hang or die at glob
+    time. Go through pyarrow with SCHEME-LESS paths — the calling style such
+    wrappers see every day: `pads.dataset("bkt/lake", filesystem=fs,
+    partitioning="hive")` + per-cursor `register()` (zero-install section).
+    First load slow (dataset creation lists the whole prefix)? Skip discovery
+    entirely — deterministic file names mean the keys are constructible:
+    `pads.dataset([f"bkt/lake/date={d}/part-000.parquet" for d in days],
+    filesystem=fs, partitioning="hive")` (verified: hive columns still derive
+    from explicit paths; `partition_base_dir=` if they don't).
   Pass the same `fs` to `pads.write_dataset(..., filesystem=fs)` for writes.
   Never `df.to_parquet('s3://…')` with a bare URL — pandas builds its own
   connection and bypasses the wrapper.
