@@ -62,6 +62,10 @@ decision matrix so the skills cross-reference each other.
 ## Editing conventions
 
 - Keep each skill self-contained and small (~200 lines / ~2k tokens).
+- Frontmatter must parse as YAML or Roo silently ignores the skill. The
+  `description:` is an UNQUOTED plain scalar — it must never contain a
+  colon-followed-by-space (`: `). Smoke check after editing any frontmatter:
+  `python -c "import yaml,re,sys; yaml.safe_load(re.match(r'^---\n(.*?)\n---\n', open(sys.argv[1]).read(), re.S).group(1))" <skill>/SKILL.md`
 - Prefer adding a demonstration to the lab over asserting a claim in prose.
 - Gotchas must be **empirically confirmed** (run it), not lifted from docs.
 - No agent-harness-specific idioms — this targets a plain mid-size model in an

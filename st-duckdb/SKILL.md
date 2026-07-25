@@ -1,6 +1,6 @@
 ---
 name: st-duckdb
-description: DuckDB as the in-app query engine for a Streamlit + S3/parquet setup — SQL (joins, aggregations) directly over parquet/CSV lakes without loading whole DataFrames: cached connection + cursor-per-operation, views over sources, httpfs/S3 credentials (plus no-install S3 fallbacks — pyarrow-native S3 dataset or fsspec/s3fs — when httpfs can't be installed), register() to join in-memory frames with the lake, arrow/df result handoff, cache_data on queries. Use when a Streamlit page needs SQL over files, cross-file joins, or pandas groupby/merge chains are slow/memory-hungry.
+description: DuckDB as the in-app query engine for a Streamlit + S3/parquet setup — SQL (joins, aggregations) directly over parquet/CSV lakes without loading whole DataFrames. Covers cached connection + cursor-per-operation, views over sources, httpfs/S3 credentials (plus no-install S3 fallbacks — pyarrow-native S3 dataset or fsspec/s3fs — when httpfs can't be installed), register() to join in-memory frames with the lake, arrow/df result handoff, cache_data on queries. Use when a Streamlit page needs SQL over files, cross-file joins, or pandas groupby/merge chains are slow/memory-hungry.
 ---
 
 # st-duckdb — SQL over your lake, inside the app
