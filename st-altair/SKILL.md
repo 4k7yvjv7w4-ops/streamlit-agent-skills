@@ -1,6 +1,6 @@
 ---
 name: st-altair
-description: Charts in Streamlit with Altair (Vega-Lite) — the default choice over Plotly. Use when plotting ANY data in Streamlit (line/bar/scatter/area/heatmap/box), theming a chart, making a chart clickable (selection driving other widgets), layering/faceting, or debugging MaxRowsError, blank charts, wrong axis types, or "chart doesn't fill the width".
+description: Charts in Streamlit with Altair (Vega-Lite) — the default choice over Plotly. Use when plotting ANY data in Streamlit (line/bar/scatter/area/heatmap/box), theming a chart, making a chart clickable (selection driving other widgets), interactive legends that highlight a curve, layering/faceting, or debugging MaxRowsError, blank charts, wrong axis types, "chart doesn't fill the width", or every chart/legend click rerunning the whole page (on_select used when client-side was enough).
 ---
 
 # Altair in Streamlit (Altair 6.2.x / Streamlit 1.58.x)
