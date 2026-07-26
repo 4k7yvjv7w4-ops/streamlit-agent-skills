@@ -151,11 +151,36 @@ st.altair_chart(chart, width="stretch")
   series — then every legend click is a full rerun (both variants verified).
 - Shift-click = multi-select; click empty space = clear. Empty selection shows
   ALL curves by default; `empty=False` fades everything until the first click.
+- This is HIGHLIGHT semantics: a plain click keeps the clicked curve and fades
+  the rest, and the next click REPLACES the selection. Axes do NOT rescale
+  (data unchanged — only opacity). For Plotly-style hide semantics see below.
 - ONLY `selection_point` binds to a legend. `selection_interval(bind="legend")`
   compiles with NO error and silently does nothing (verified) — don't emit it.
 - Many series → the legend truncates its entries (Vega-Lite `symbolLimit`,
   ~30 by default; not lab-verified) and hidden entries can't be clicked — use
   `st.multiselect` to filter the frame instead.
+
+**Plotly-style variant — click a legend entry to HIDE that curve (and rescale):**
+
+```python
+services = sorted(df["service"].unique())
+hide = alt.selection_point(fields=["service"], bind="legend",
+                           toggle="true", empty=False)   # all three required
+chart = (alt.Chart(df).mark_line()
+         .encode(x="date:T", y="latency_ms:Q",
+                 color=alt.Color("service:N", scale=alt.Scale(domain=services)))
+         .add_params(hide)
+         .transform_filter(~hide))                       # NOT selected -> kept
+```
+
+- `toggle="true"` → each click toggles that entry independently (no
+  shift needed); default toggle would make the next click un-hide the previous.
+- `empty=False` → nothing clicked matches NOTHING, so `~hide` keeps everything.
+  Without it an empty selection matches ALL rows and the chart starts blank.
+- Fixed `scale=alt.Scale(domain=services)` → the legend keeps showing hidden
+  series (else their entries vanish with the data and can't be clicked back).
+- `transform_filter` removes rows, so axes DO rescale — the "refresh" the
+  opacity variant can't give. Verified on Streamlit 1.58 AND 1.55.0.
 
 ## Pattern — layer, concat, facet (composition operators)
 
