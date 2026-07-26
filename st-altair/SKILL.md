@@ -181,6 +181,10 @@ chart = (alt.Chart(df).mark_line()
   series (else their entries vanish with the data and can't be clicked back).
 - `transform_filter` removes rows, so axes DO rescale — the "refresh" the
   opacity variant can't give. Verified on Streamlit 1.58 AND 1.55.0.
+- **Pick ONE variant — never combine them.** This variant must have NO
+  `opacity=alt.condition(...)` in its encode, and the highlight variant must
+  have NO `transform_filter`. Combining both makes the clicked curve VANISH
+  while the others merely fade (the filter removes what the opacity keeps).
 
 ## Pattern — layer, concat, facet (composition operators)
 
