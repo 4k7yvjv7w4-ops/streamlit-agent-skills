@@ -135,6 +135,28 @@ if picked:
 - Empty selection = empty list/dict — always guard before indexing.
 - `selection_mode=` on `st.altair_chart` limits to `"point"`/`"interval"`.
 
+## Pattern — interactive legend (click legend entry to highlight its curve)
+
+```python
+sel = alt.selection_point(fields=["service"], bind="legend")     # field driving color=
+chart = (alt.Chart(df).mark_line()
+         .encode(x="date:T", y="latency_ms:Q", color="service:N",
+                 opacity=alt.condition(sel, alt.value(1.0), alt.value(0.15)))
+         .add_params(sel))
+st.altair_chart(chart, width="stretch")
+```
+
+- This runs CLIENT-SIDE: no `on_select` → legend clicks do NOT rerun the script.
+  Only add `on_select="rerun"` + `name=` + `key=` if Python must know the picked
+  series — then every legend click is a full rerun (both variants verified).
+- Shift-click = multi-select; click empty space = clear. Empty selection shows
+  ALL curves by default; `empty=False` fades everything until the first click.
+- ONLY `selection_point` binds to a legend. `selection_interval(bind="legend")`
+  compiles with NO error and silently does nothing (verified) — don't emit it.
+- Many series → the legend truncates its entries (Vega-Lite `symbolLimit`,
+  ~30 by default; not lab-verified) and hidden entries can't be clicked — use
+  `st.multiselect` to filter the frame instead.
+
 ## Pattern — layer, concat, facet (composition operators)
 
 ```python
