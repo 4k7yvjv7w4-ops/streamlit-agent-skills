@@ -5,9 +5,9 @@ overview lives in `README.md`; this file is the contributor/maintainer brief.
 
 ## What this is
 
-Eighteen self-contained skills in Roo / `SKILL.md` format — Streamlit-centric,
-plus Plotly Dash (`dash-core`) and a Streamlit→Dash migration guide
-(`st-to-dash`). Each skill is a
+Nineteen self-contained skills in Roo / `SKILL.md` format — Streamlit-centric,
+plus Plotly Dash (`dash-core`, `dash-jupyter`) and a Streamlit→Dash migration
+guide (`st-to-dash`). Each skill is a
 directory with a `SKILL.md` reference doc, optionally a runnable `*_lab.py`
 proof and a `data/` folder. Written for a mid-size model (target: Qwen 3.6-27B)
 that loads **one skill per task** (~2k tokens each), never all of them at once.
@@ -59,6 +59,7 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-duckdb/` | in-app DuckDB over parquet/CSV/S3: cache_resource connection + cursor per op, views, httpfs secrets, register() memory⋈lake joins, df/arrow out, cache_data | `st_duckdb_lab.py` |
 | `dash-core/` | Plotly Dash: callback model, dcc.Store state, duplicate-output trap, run→run_server obsolescence, pages, Interval, browser-free testing | `dash_core_lab.py` + `test_dash_core.py` |
 | `st-to-dash/` | Streamlit→Dash migration: concept map, porting recipe, verified side-by-side pair | `example_streamlit.py` + `example_dash.py` |
+| `dash-jupyter/` | Dash behind JupyterLab/Hub proxies: jupyter-server-proxy + two-sided pathname prefixes, skeleton with pages/, notebook modes | `skeleton/app.py` + `test_dash_jupyter.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
 decision matrix so the skills cross-reference each other.
