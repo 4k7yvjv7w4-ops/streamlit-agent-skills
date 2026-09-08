@@ -13,7 +13,12 @@ from dash import Dash, dcc, html
 
 PORT = 8519
 BASE = os.environ.get("JUPYTERHUB_SERVICE_PREFIX", "/")
-PREFIX = f"{BASE}proxy/{PORT}/"          # trailing slash REQUIRED (silent 404s without it)
+# PREFIX must be EXACTLY what precedes the app's routes in your browser's
+# address bar (trailing slash required). If pages render their links but no
+# content, the computed value is wrong — the server log's
+# UnsupportedRelativePath error prints the browser's real path ("You
+# supplied: ..."); set DASH_PREFIX to its prefix part and restart.
+PREFIX = os.environ.get("DASH_PREFIX") or f"{BASE}proxy/{PORT}/"
 
 app = Dash(__name__, use_pages=True,
            requests_pathname_prefix=PREFIX,   # browser-side URLs

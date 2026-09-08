@@ -9,6 +9,7 @@ import re
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -41,6 +42,28 @@ def main() -> None:
         hrefs = re.findall(r'"href": "([^"]*)"', layout)
         assert "/user/alice/proxy/8519/monitor" in hrefs, hrefs
         print("PASS pages: Link hrefs auto-prefixed ->", hrefs)
+
+        def route(pathname):
+            b = json.dumps({
+                "output": ".._pages_content.children..._pages_store.data..",
+                "outputs": [{"id": "_pages_content", "property": "children"},
+                            {"id": "_pages_store", "property": "data"}],
+                "inputs": [{"id": "_pages_location", "property": "pathname",
+                            "value": pathname},
+                           {"id": "_pages_location", "property": "search", "value": ""}],
+                "changedPropIds": ["_pages_location.pathname"]}).encode()
+            r = urllib.request.Request("http://127.0.0.1:8519/_dash-update-component",
+                                       data=b, headers={"Content-Type": "application/json"})
+            return json.dumps(json.loads(OPEN(r).read())["response"]["_pages_content"])
+
+        assert '"thr"' in route("/user/alice/proxy/8519/monitor")
+        print("PASS routing: prefixed pathname resolves page content")
+        try:
+            route("/wrong/prefix/monitor")
+            raise AssertionError("mismatched prefix should 500")
+        except urllib.error.HTTPError as e:
+            assert e.code == 500
+            print("PASS routing: prefix mismatch -> 500 (the blank-content symptom)")
 
         body = json.dumps({"output": "echo.children",
                            "outputs": {"id": "echo", "property": "children"},

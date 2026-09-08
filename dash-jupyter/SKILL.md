@@ -85,10 +85,22 @@ anything beyond a throwaway, use the terminal mode.
 
 ## Gotchas (verified unless marked)
 
-- **Missing trailing slash fails SILENTLY**: `requests_pathname_prefix=
-  "/proxy/8519"` is accepted, then emits mangled URLs like
-  `/proxy/8519_dash-component-suites/...` → 404s, blank page, no Python error.
-  A missing LEADING slash at least raises `InvalidConfig`. Always end with `/`.
+- **Pages links render but content stays BLANK**: the routing callback dies
+  with HTTP 500 whenever the browser's pathname doesn't literally start with
+  `requests_pathname_prefix` — wrong user/port in the computed prefix, an
+  extra corporate base path in front of the Hub, or direct port access. The
+  server log has the answer verbatim: `dash.exceptions.UnsupportedRelativePath
+  ... You supplied: <browser path> and requests_pathname_prefix was <config>`.
+  The BROWSER ADDRESS BAR is the source of truth — set the prefix to exactly
+  what precedes your routes there (the skeleton reads a `DASH_PREFIX` env var
+  override for this). Static assets can load fine while this is broken — a
+  rendered shell proves nothing about routing. (Trailing slash on the opened
+  URL is tolerated; root with and without both route.)
+- **Missing trailing slash in the CONFIG fails SILENTLY**:
+  `requests_pathname_prefix="/proxy/8519"` is accepted, then emits mangled
+  URLs like `/proxy/8519_dash-component-suites/...` → 404s, blank page, no
+  Python error. A missing LEADING slash at least raises `InvalidConfig`.
+  Always end with `/`.
 - Blank page or 404s on `_dash-component-suites` → wrong/missing
   `requests_pathname_prefix`. Frozen callbacks with the page rendering → same
   root cause (the POST goes to the unprefixed path).
