@@ -5,7 +5,7 @@ description: Porting or migrating a Streamlit app to Plotly Dash — or deciding
 
 # Streamlit → Dash migration (verified: streamlit 1.58 / dash 4.4)
 
-Load [dash-core] alongside this. The bundled pair `example_streamlit.py` /
+Load [dash-core] alongside this; each mapped row below has a Dash skill behind it ([dash-data], [dash-grid], [dash-layout], [dash-linked-views]). The bundled pair `example_streamlit.py` /
 `example_dash.py` is the SAME app in both frameworks — read them side by side;
 both are test-verified.
 

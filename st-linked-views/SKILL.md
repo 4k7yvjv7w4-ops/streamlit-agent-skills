@@ -75,13 +75,18 @@ same bundle, but (verified in [st-perspective]) **its clicks never reach
 Python and separate viewers don't share a table** — so it cannot drive the
 other widgets. Give it one expander: `perspective_static(bundle["detail"])`.
 
-## When this isn't enough → phase two (JavaScript)
+## When this isn't enough → zero-latency linking
 
-If users need true zero-latency linking (click → others update with no
-server trip at all), the tool is a Perspective **workspace**: every table
-and chart as viewers over ONE in-browser table, filters propagating
-client-side, data pushed via `perspective_websocket`. That is a custom
-component with self-hosted JS (and another port behind a Jupyter proxy —
-[dash-jupyter] mechanics). Dash does NOT change the calculus — its callbacks
-are server round-trips like fragments; only `clientside_callback` (JS) is
-instant. Build phase one first; most teams never need phase two.
+If users need clicks with NO server trip at all, two verified routes:
+
+- **Dash** — [dash-linked-views]: the same bundle in `dcc.Store` plus a
+  10-line `clientside_callback` JavaScript template (copy verbatim) that
+  filters rows and toggles per-category traces in the browser. Measured:
+  zero `_dash-update-component` requests per click. This is the strongest
+  argument for the Dash side of a strategic app.
+- **Perspective workspace** — every view over ONE in-browser table with
+  client-side filter propagation ([st-perspective] explains why the Streamlit
+  component can't do this today; it needs a custom component + self-hosted JS).
+
+Build this Streamlit version first; move to the Dash twin when click latency
+is what users complain about.

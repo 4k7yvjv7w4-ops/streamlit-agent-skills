@@ -5,9 +5,10 @@ overview lives in `README.md`; this file is the contributor/maintainer brief.
 
 ## What this is
 
-Twenty self-contained skills in Roo / `SKILL.md` format — Streamlit-centric,
-plus Plotly Dash (`dash-core`, `dash-jupyter`) and a Streamlit→Dash migration
-guide (`st-to-dash`). Each skill is a
+Twenty-four self-contained skills in Roo / `SKILL.md` format — Streamlit-centric,
+plus a Plotly Dash set (`dash-core`, `dash-jupyter`, `dash-data`, `dash-grid`,
+`dash-layout`, `dash-linked-views`) and a Streamlit→Dash migration guide
+(`st-to-dash`). Each skill is a
 directory with a `SKILL.md` reference doc, optionally a runnable `*_lab.py`
 proof and a `data/` folder. Written for a mid-size model (target: Qwen 3.6-27B)
 that loads **one skill per task** (~2k tokens each), never all of them at once.
@@ -60,6 +61,10 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-linked-views/` | key-input → one cached fetch → fragment-scoped linked tables/charts with selection fan-out; Perspective as explore panel | `st_linked_views_lab.py` + `test_st_linked_views.py` |
 | `dash-core/` | Plotly Dash: callback model, dcc.Store state, duplicate-output trap, run→run_server obsolescence, pages, Interval, browser-free testing | `dash_core_lab.py` + `test_dash_core.py` |
 | `st-to-dash/` | Streamlit→Dash migration: concept map, porting recipe, verified side-by-side pair | `example_streamlit.py` + `example_dash.py` |
+| `dash-data/` | Dash data access: singleton connection, shared flask-caching memoize, cursor per callback, Store-safe results | `dash_data_lab.py` + `test_dash_data.py` |
+| `dash-grid/` | dash-ag-grid: JS-function props, assets/dashAgGridFunctions.js, selectedRows, getRowId, license map; DataTable | `dash_grid_lab.py` + `test_dash_grid.py` (Playwright) |
+| `dash-layout/` | dash-bootstrap-components CDN-free: vendored CSS in assets/, Row/Col, Cards, Tabs, Modal, Offcanvas | `skeleton/app.py` + `test_dash_layout.py` (Playwright) + `fetch_bootstrap_css.py` |
+| `dash-linked-views/` | key → one cached fetch → Store; clientside_callback JS template links grids + charts with zero server trips | `dash_linked_views_lab.py` + `test_dash_linked_views.py` (Playwright) |
 | `dash-jupyter/` | Dash behind JupyterLab/Hub proxies: jupyter-server-proxy + two-sided pathname prefixes, skeleton with pages/, notebook modes | `skeleton/app.py` + `test_dash_jupyter.py` |
 
 Every `SKILL.md` opens with the same 4-line "which grid/component to pick"
@@ -82,16 +87,19 @@ decision matrix so the skills cross-reference each other.
 - Labs are standalone apps: `python -m streamlit run <skill>/<lab>.py`.
 - They also pass `streamlit.testing.v1.AppTest` with zero exceptions — run that
   as a smoke check after editing a lab.
-- Dash labs have no AppTest — their verification is `python
-  dash-core/test_dash_core.py` (direct callback calls + served-endpoint
-  smoke) and the paired asserts in `st-to-dash/` (see its examples).
+- Dash labs have no AppTest — their verification is each skill's
+  `test_*.py`: direct callback calls + served-endpoint smoke, and for
+  dash-grid / dash-layout / dash-linked-views a headless-Chromium run via
+  Playwright (`pip install playwright`; the tests find a preinstalled
+  Chromium under `/opt/pw-browsers`, adjust `CHROME` otherwise).
 - The aggrid lab needs its `data/`: `cd st-aggrid/data && python
   make_sample_data.py` regenerates the seeded parquets.
 
 ## Version discipline
 
 - Verified on **Streamlit 1.58** / **streamlit-aggrid 1.2** /
-  **streamlit-pivot 0.5** / **Dash 4.4**; the labs are the runnable proof.
+  **streamlit-pivot 0.5** / **Dash 4.4** / **dash-ag-grid 35** /
+  **dash-bootstrap-components 2.0**; the labs are the runnable proof.
 - The intended deployment target runs **Streamlit 1.55**. Only three API deltas
   exist and all are 1.56+, so avoid or guard them:
   `st.container(autoscroll=)`, `st.dataframe(selection_default=)`,

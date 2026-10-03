@@ -31,6 +31,8 @@ if __name__ == "__main__":
 ```
 
 Runnable proof: `dash_core_lab.py` (+ `test_dash_core.py`, no browser needed).
+The rest of the Dash set: [dash-jupyter] (proxy), [dash-data] (queries/caching),
+[dash-grid] (AG Grid), [dash-layout] (dbc, CDN-free), [dash-linked-views] (zero-latency linking).
 
 ## Callback rules (each verified)
 
