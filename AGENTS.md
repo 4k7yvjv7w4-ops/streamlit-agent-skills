@@ -5,7 +5,7 @@ overview lives in `README.md`; this file is the contributor/maintainer brief.
 
 ## What this is
 
-Nineteen self-contained skills in Roo / `SKILL.md` format — Streamlit-centric,
+Twenty self-contained skills in Roo / `SKILL.md` format — Streamlit-centric,
 plus Plotly Dash (`dash-core`, `dash-jupyter`) and a Streamlit→Dash migration
 guide (`st-to-dash`). Each skill is a
 directory with a `SKILL.md` reference doc, optionally a runnable `*_lab.py`
@@ -57,6 +57,7 @@ private identifier to `.check_generic.local`, never to a tracked file.
 | `st-mcp-server/` | MCP server (FastMCP) over parquet/SQL/CSV/API: schema-from-type-hints, caps, read-only guards, transports, in-memory tests; DuckDB federation variant for cross-source joins | `mcp_data_server.py` + `mcp_duck_server.py` + tests |
 | `st-mcp-client/` | LLM⇄MCP, LangChain-first (langchain-mcp-adapters + bind_tools + bounded loop; raw OpenAI-API bridge fallback), Streamlit chat recipe, trust rules | `test_mcp_langchain.py` + `mcp_llm_bridge.py` + `test_mcp_bridge.py` |
 | `st-duckdb/` | in-app DuckDB over parquet/CSV/S3: cache_resource connection + cursor per op, views, httpfs secrets, register() memory⋈lake joins, df/arrow out, cache_data | `st_duckdb_lab.py` |
+| `st-linked-views/` | key-input → one cached fetch → fragment-scoped linked tables/charts with selection fan-out; Perspective as explore panel | `st_linked_views_lab.py` + `test_st_linked_views.py` |
 | `dash-core/` | Plotly Dash: callback model, dcc.Store state, duplicate-output trap, run→run_server obsolescence, pages, Interval, browser-free testing | `dash_core_lab.py` + `test_dash_core.py` |
 | `st-to-dash/` | Streamlit→Dash migration: concept map, porting recipe, verified side-by-side pair | `example_streamlit.py` + `example_dash.py` |
 | `dash-jupyter/` | Dash behind JupyterLab/Hub proxies: jupyter-server-proxy + two-sided pathname prefixes, skeleton with pages/, notebook modes | `skeleton/app.py` + `test_dash_jupyter.py` |
