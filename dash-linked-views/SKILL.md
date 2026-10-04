@@ -3,7 +3,7 @@ name: dash-linked-views
 description: Fast linked "dashboard" pages in Plotly Dash — a key input (code/id/name) drives several linked grids and charts, and clicking one view filters the others with ZERO server round-trips — one cached fetch per key into dcc.Store, ready-made per-category Plotly traces, and a 10-line clientside_callback (JavaScript template, copy don't author) that filters rows and toggles trace visibility. Use for "several tables and charts linked together reacting instantly", when clicks are slow because every callback hits the server, or as the Dash counterpart of st-linked-views.
 ---
 
-# Linked views in Dash — one fetch per key, zero-latency linking (verified in a browser)
+# Linked views in Dash — one fetch per key, zero-latency linking (verified in a browser on dash 4.4 and 3.2)
 
 Proof: `dash_linked_views_lab.py` + `test_dash_linked_views.py` — headless
 Chromium counts `_dash-update-component` requests: a region click re-filters

@@ -57,7 +57,8 @@ def main() -> None:
             print(f"PASS click: detail 9->3 rows, 1 of 3 traces visible, '{status}', "
                   f"ZERO server requests")
 
-            page.click("#svc"); page.click("[role=option]:has-text('media')")   # dash 4 dropdown = button + portal listbox
+            page.click("#svc")   # dash 4 = button + portal listbox; dash 3 = react-select menu
+            page.click("[role=option]:has-text('media'), .VirtualizedSelectOption:has-text('media'), .Select-option:has-text('media')")
             page.wait_for_function(
                 "document.querySelector('#fetches').innerText.includes('2')", timeout=10000)
             page.wait_for_function(

@@ -3,7 +3,7 @@ name: dash-core
 description: Building or debugging Plotly Dash apps — the callback-based alternative to Streamlit. Use for ANY Dash work — layout with dcc/html components, @callback Input/Output/State wiring, "Duplicate callback outputs" errors, app.run_server ObsoleteAttributeException, per-user state via dcc.Store (there is NO session_state), multi-page apps (dash.register_page/page_container), dcc.Interval polling, background callbacks, or testing callbacks without a browser.
 ---
 
-# Dash — the inverse of Streamlit's model (verified on dash 4.4)
+# Dash — the inverse of Streamlit's model (verified on dash 4.4 and 3.2)
 
 Streamlit re-runs the whole script on every interaction. Dash does the
 opposite: the **layout is built once**, then each interaction fires a

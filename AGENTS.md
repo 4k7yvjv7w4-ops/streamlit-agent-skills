@@ -98,9 +98,14 @@ decision matrix so the skills cross-reference each other.
 ## Version discipline
 
 - Verified on **Streamlit 1.58** / **streamlit-aggrid 1.2** /
-  **streamlit-pivot 0.5** / **Dash 4.4** / **dash-ag-grid 35** /
-  **dash-bootstrap-components 2.0**; the labs are the runnable proof.
-- The intended deployment target runs **Streamlit 1.55**. Only three API deltas
+  **streamlit-pivot 0.5** / **Dash 4.4 AND 3.2** / **dash-ag-grid 35** /
+  **dash-bootstrap-components 2.0**; the labs are the runnable proof. The
+  Dash set's tests pass unchanged on both Dash majors (3.2.0 is a known
+  deployment pin); the only 3→4 delta met so far is dcc.Dropdown's DOM
+  (react-select menu vs button + portal listbox) — tests select both ways.
+- The intended deployment target runs **Streamlit 1.55** (also pinned there:
+  Dash 3.2.0, streamlit-perspective 0.0.2). st-linked-views and st-to-dash's
+  Streamlit half are AppTest-verified on a real 1.55.0 install. Only three API deltas
   exist and all are 1.56+, so avoid or guard them:
   `st.container(autoscroll=)`, `st.dataframe(selection_default=)`,
   `selection_mode="single-row-required"`. The stale-rule notes in `st-layout`

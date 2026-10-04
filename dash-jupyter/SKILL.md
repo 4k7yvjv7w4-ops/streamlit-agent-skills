@@ -3,7 +3,7 @@ name: dash-jupyter
 description: Running a Plotly Dash app from inside JupyterLab / JupyterHub behind a corporate proxy — fixes the blank page, 404s on _dash-component-suites, and dead callbacks by pairing jupyter-server-proxy with requests_pathname_prefix. Ships a verified skeleton (app.py + pages/) ready to copy, covers notebook-cell modes (jupyter_mode, infer_jupyter_proxy_config), the missing-trailing-slash silent failure, and port-in-use on cell re-run. Use whenever Dash must be developed or served from a Jupyter environment.
 ---
 
-# Dash inside JupyterLab/JupyterHub (verified on dash 4.4)
+# Dash inside JupyterLab/JupyterHub (verified on dash 4.4 and 3.2)
 
 Load [dash-core] for the framework itself; this skill is only about making it
 reachable from a Jupyter environment.

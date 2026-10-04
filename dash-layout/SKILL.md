@@ -3,7 +3,7 @@ name: dash-layout
 description: Page structure in Plotly Dash with dash-bootstrap-components — responsive Row/Col grid, Cards, Tabs, Modal dialogs, Offcanvas sidebar, Navbar — CDN-free for corporate/air-gapped setups (dbc.themes.* are CDN URLs; vendor the CSS into assets/, obtained from a PyPI wheel). Use for laying out a Dash page, when components render but look unstyled, or when porting st-layout (columns/tabs/dialogs/sidebar) to Dash.
 ---
 
-# Layout in Dash — dash-bootstrap-components, CDN-free (verified dbc 2.0 / dash 4.4)
+# Layout in Dash — dash-bootstrap-components, CDN-free (verified dbc 2.0 / dash 4.4 and 3.2)
 
 Proof: `skeleton/app.py` + `test_dash_layout.py` (headless Chromium confirms
 the vendored CSS is applied and modal/offcanvas/tabs callbacks work). Copy

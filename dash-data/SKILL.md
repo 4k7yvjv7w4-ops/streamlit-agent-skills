@@ -3,7 +3,7 @@ name: dash-data
 description: Data access in Plotly Dash — translating Streamlit's cache_resource/cache_data habits to a module-singleton connection, a SHARED flask-caching memoize keyed by primitives, cursor-per-callback DuckDB over parquet/S3 lakes, and Store-safe (JSON-able) results. Use when loading data in a Dash app, when "every callback re-queries", when a dcc.Store refuses a DataFrame, or when porting st-duckdb/st-connection code to Dash.
 ---
 
-# Data access in Dash (verified on dash 4.4 / duckdb 1.5)
+# Data access in Dash (verified on dash 4.4 and 3.2 / duckdb 1.5)
 
 Proof: `dash_data_lab.py` + `test_dash_data.py` (fetch counter, 8-thread
 cursor hammer, JSON round-trip). The LAKE side is framework-agnostic — hive

@@ -6,7 +6,7 @@ linked views) and a Streamlit→Dash migration guide —
 written for a mid-size model (tested target: Qwen 3.6-27B):
 each skill is ~2k tokens, load ONE per task, never all twenty-four. Verified
 empirically on **Streamlit 1.58** / **streamlit-aggrid 1.2** /
-**streamlit-pivot 0.5** / **Altair 6.2** / **Dash 4.4** / **dash-ag-grid 35** / **dbc 2.0**, and API-checked
+**streamlit-pivot 0.5** / **Altair 6.2** / **Dash 4.4 and 3.2** / **dash-ag-grid 35** / **dbc 2.0**, and API-checked
 against **Streamlit 1.55** — the
 bundled `*_lab.py` files are runnable proof of every claim. The demo data is
 **synthetic service-latency telemetry** (invented service/region names,

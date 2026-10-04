@@ -3,7 +3,7 @@ name: dash-grid
 description: Tables in Plotly Dash — dash-ag-grid (AG Grid) for interactive grids and dash_table.DataTable for plain ones. Covers columnDefs with JS-function props ({"function" - valueFormatter/cellStyle/cellRenderer}), the assets/dashAgGridFunctions.js namespace for custom JS, row selection → selectedRows → callback, getRowId stability, community-vs-enterprise features, and porting st-aggrid/st-dataframe knowledge. Use for any grid/table in Dash or when a JS function prop "does nothing".
 ---
 
-# Grids in Dash (verified on dash-ag-grid 35 / dash 4.4, in a real browser)
+# Grids in Dash (verified on dash-ag-grid 35 / dash 4.4 and 3.2, in a real browser)
 
 **Pick:** interactive grid (sort/filter/select/format/edit) → `dash-ag-grid`
 · plain small table, no JS → `dash_table.DataTable`. Proof:
